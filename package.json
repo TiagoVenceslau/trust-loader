@@ -1,5 +1,5 @@
 {
-  "name": "dapp-trust-loader",
+  "name": "@tvenceslau/trust-loader",
   "version": "0.0.1",
   "description": "Trust Loader for Distributed Applications",
   "scripts": {
@@ -7,17 +7,18 @@
     "start": "npm run build && node lib/index.js",
     "build": "rimraf ./lib && tsc",
     "build:prod": "rimraf ./lib && tsc && npm run minify",
+    "build:loader": "node ./node_modules/octopus/run dependencies && node ./node_modules/octopus/run build",
     "minify": "npm install gulp gulp-babel gulp-rename gulp-concat gulp-sourcemaps gulp-typescript gulp-expect-file gulp-uglify @babel/preset-env && npx gulp && npm uninstall gulp gulp-babel gulp-expect-file gulp-rename gulp-sourcemaps gulp-typescript gulp-uglify gulp-concat",
     "test": "jest --coverage",
     "prepare-release": "npm run build:prod && npm run docs",
     "release": "./bin/tag-release.sh",
     "clean-publish": "npx clean-publish",
     "coverage": "npm test && npm install jest-coverage-badges && jest-coverage-badges --input \"./workdocs/coverage/coverage-summary.json\" --output \"./workdocs/badges\" && npm uninstall jest-coverage-badges",
-    "docs": "npm run coverage && npx rimraf ./docs/* && cp -r ./workdocs/assets ./docs/assets && npm install better-docs taffydb && npx markdown-include ./mdCompile.json && npx jsdoc -c jsdocs.json -t ./node_modules/better-docs && cd docs && npm remove better-docs taffydb"
+    "docs": "npx rimraf ./docs/* && cp -r ./workdocs/assets ./docs/assets && npm install better-docs taffydb && npx markdown-include ./mdCompile.json && npx jsdoc -c jsdocs.json -t ./node_modules/better-docs && cd docs && npm remove better-docs taffydb"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TiagoVenceslau/dapp-trust-loader.git"
+    "url": "git+https://github.com/TiagoVenceslau/trust-loader.git"
   },
   "engines": {
     "node": ">=14.0.0",
@@ -36,10 +37,11 @@
   "author": "TiagoVenceslau",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TiagoVenceslau/dapp-trust-loader/issues"
+    "url": "https://github.com/TiagoVenceslau/trust-loader/issues"
   },
-  "homepage": "https://github.com/TiagoVenceslau/dapp-trust-loader#readme",
+  "homepage": "https://github.com/TiagoVenceslau/trust-loader#readme",
   "devDependencies": {
+    "octopus": "git+https://github.com/PrivateSky/octopus.git",
     "@babel/preset-env": "^7.16.5",
     "@ionic/core": "^6.0.1",
     "@types/jest": "^26.0.24",
