@@ -29,7 +29,7 @@
         {
           "type": "copy",
           "src": "../privatesky/psknode/bundles/webshims.js",
-          "target": "./laoder/bundles/webshims.js",
+          "target": "./loader/bundles/webshims.js",
           "options": {
             "overwrite": true
           }

@@ -51,6 +51,10 @@ export enum LoaderAgent {
     BROWSER = 'browser'
 }
 
+export enum EnclaveTypes {
+    WALLET = "WalletDBEnclave"
+}
+
 /**
  * Environment definitions to be passes to the loader and the interior apps
  *
@@ -82,9 +86,17 @@ export type EnvironmentDefinition = {
      */
     mode: LoaderMode,
     /**
-     * The anchoring domain
+     * The anchoring domain. defaults to "vault"
      */
-    domain: string,
+    vaultDomain: string,
+    /**
+     * The DID domain. defaults to "vault"
+     */
+    didDomain: string
+    /**
+     * The enclave type. defaults to {@link EnclaveTypes.WALLET}
+     */
+    enclaveType: string;
     /**
      * The development stage. defaults to {@link LoaderStage.DEVELOPMENT}
      */

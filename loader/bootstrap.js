@@ -2,10 +2,9 @@
  * @module loader
  */
 
-/**
- *
- */
 import env from "./environment.js";
+import {Loader} from './bundles/trust-loader.js';
+import * as config from "./loader-config.json";
 
 // Handle Base Element - should not run if inside iframe
 if (!window.frameElement){
@@ -14,7 +13,4 @@ if (!window.frameElement){
     document.querySelector('head').prepend(base_el);
 }
 
-if (typeof require !== 'undefined') {
-    let config = require("opendsu").loadApi("config");
-    config.autoconfigFromEnvironment(env);
-}
+const loader = new Loader(config, env);

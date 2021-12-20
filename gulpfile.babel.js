@@ -59,7 +59,7 @@ function exportModulesBundles() {
             }]]
         }))
         .pipe(concat('index.bundle.js'))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(rename({ extname: '.min.esm.js' }))
         .pipe(sourcemaps.write())
         .pipe(dest('dist/esm/'));
@@ -74,7 +74,7 @@ function exportDefaultBundles() {
         .pipe(tsProject())
         .pipe(babel())
         .pipe(concat('index.bundle.js'))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write())
         .pipe(dest('dist/'));
