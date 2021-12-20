@@ -6,6 +6,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const concat = require('gulp-concat');
+const expect = require('gulp-expect-file');
 
 const tsOptions = {
     "emitDeclarationOnly": true,
@@ -15,7 +16,9 @@ const tsOptions = {
 
 function exportModules() {
     const tsProject = ts.createProject('tsconfig.json', Object.assign({}, tsOptions, {module: "umd"}));
-    return src('src/!tests/**/*.ts')
+    const files = ['src/**/*.ts'];
+    return src(files)
+        .pipe(expect(files))
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(babel({
@@ -31,7 +34,9 @@ function exportModules() {
 
 function exportDefault() {
     const tsProject = ts.createProject('tsconfig.json', tsOptions);
-    return src('src/!tests/**/*.ts')
+    const files = ['src/**/*.ts'];
+    return src('src/**/*.ts')
+        .pipe(expect(files))
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(babel())
@@ -43,7 +48,9 @@ function exportDefault() {
 
 function exportModulesBundles() {
     const tsProject = ts.createProject('tsconfig.json', Object.assign({}, tsOptions, {module: "umd"}));
-    return src('src/!tests/**/*.ts')
+    const files = ['src/**/*.ts'];
+    return src('src/**/*.ts')
+        .pipe(expect(files))
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(babel({
@@ -60,7 +67,9 @@ function exportModulesBundles() {
 
 function exportDefaultBundles() {
     const tsProject = ts.createProject('tsconfig.json', tsOptions);
-    return src('src/!tests/**/*.ts')
+    const files = ['src/**/*.ts'];
+    return src('src/**/*.ts')
+        .pipe(expect(files))
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(babel())

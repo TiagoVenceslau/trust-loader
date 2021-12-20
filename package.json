@@ -7,7 +7,7 @@
     "start": "npm run build && node lib/index.js",
     "build": "rimraf ./lib && tsc",
     "build:prod": "rimraf ./lib && tsc && npm run minify",
-    "minify": "npm install gulp gulp-babel gulp-rename gulp-concat gulp-sourcemaps gulp-typescript gulp-uglify @babel/preset-env && npx gulp && npm uninstall gulp gulp-babel gulp-rename gulp-sourcemaps gulp-typescript gulp-uglify gulp-concat",
+    "minify": "npm install gulp gulp-babel gulp-rename gulp-concat gulp-sourcemaps gulp-typescript gulp-expect-file gulp-uglify @babel/preset-env && npx gulp && npm uninstall gulp gulp-babel gulp-expect-file gulp-rename gulp-sourcemaps gulp-typescript gulp-uglify gulp-concat",
     "test": "jest --coverage",
     "prepare-release": "npm run build:prod && npm run docs",
     "release": "./bin/tag-release.sh",
