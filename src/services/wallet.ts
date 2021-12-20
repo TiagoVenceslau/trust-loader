@@ -141,7 +141,7 @@ export class WalletService {
         const instantiateNewDossier = (files: any) => {
             let resolver = require("opendsu").loadApi("resolver");
             let keyssi = require("opendsu").loadApi("keyssi");
-            resolver.createDSU(keyssi.createTemplateSeedSSI(self.environment.domain, undefined, undefined,undefined, self.environment.vault), (err: Err, appDSU: any) => {
+            resolver.createDSU(keyssi.createTemplateSeedSSI(self.environment.vaultDomain, undefined, undefined,undefined, self.environment.vault), (err: Err, appDSU: any) => {
                 if (err)
                     return callback(new Error(`Failed to create DSU ${err}`));
 
@@ -276,7 +276,7 @@ export class WalletService {
 
     create(credentials: string[], callback: Callback){
         if (this.creationStrategy)
-            return this.creationStrategy(this.environment.domain, credentials, this.spinner, (err: Err, ...results) => {
+            return this.creationStrategy(this.environment.vaultDomain, credentials, this.spinner, (err: Err, ...results) => {
                 if (err)
                     console.error(`Wallet creation strategy failed:`, err);
                 callback(err, ...results);
@@ -284,7 +284,7 @@ export class WalletService {
 
         const resolver = require("opendsu").loadApi("resolver");
         const keySSISpace = require("opendsu").loadApi("keyssi");
-        const {domain, vault} = this.environment;
+        const {vaultDomain, vault} = this.environment;
 
         const self  = this;
 
@@ -293,7 +293,7 @@ export class WalletService {
             self.fileService.getFile(walletTemplateFolderName + "/" + ssiFileName, (err, dsuType)  => {
                 if (err)
                     return callback(err);
-                resolver.createDSU(keySSISpace.createTemplateWalletSSI(domain, credentials, vault), {useSSIAsIdentifier:true, dsuTypeSSI: dsuType, walletKeySSI: self.config.walletKeySSI}, (err: Err, walletDSU: any) => {
+                resolver.createDSU(keySSISpace.createTemplateWalletSSI(vaultDomain, credentials, vault), {useSSIAsIdentifier:true, dsuTypeSSI: dsuType, walletKeySSI: self.config.walletKeySSI}, (err: Err, walletDSU: any) => {
                     if (err)
                         return callback(err);
                     walletDSU = walletDSU.getWritableDSU();
@@ -322,7 +322,7 @@ export class WalletService {
             });
         }
 
-        resolver.loadDSU(keySSISpace.createTemplateWalletSSI(domain,  credentials, vault), (err: Err, walletDSU: any) => {
+        resolver.loadDSU(keySSISpace.createTemplateWalletSSI(vaultDomain,  credentials, vault), (err: Err, walletDSU: any) => {
             if(err){
                 build();
             } else {
@@ -337,9 +337,9 @@ export class WalletService {
         const resolver = require("opendsu").loadApi("resolver");
         const keyssi = require("opendsu").loadApi("keyssi");
 
-        const {domain, vault} = this.environment;
+        const {vaultDomain, vault} = this.environment;
 
-        const walletSSI = keyssi.createTemplateWalletSSI(domain, credentials, vault);
+        const walletSSI = keyssi.createTemplateWalletSSI(vaultDomain, credentials, vault);
 
         resolver.loadDSU(walletSSI, (err: Err, constDSU: any) => {
             if (err) {
