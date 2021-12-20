@@ -1,0 +1,158 @@
+{
+  "workDir": ".",
+  "dependencies": [
+    {
+      "name": "PSK bundles",
+      "src": "",
+      "actions": [
+        {
+          "type": "copy",
+          "src": "../privatesky/psknode/bundles/swBoot.js",
+          "target": "./loader/swBoot.js",
+          "options": {
+            "overwrite": true
+          }
+        },
+        {
+          "type": "copy",
+          "src": "../privatesky/psknode/bundles/webshims.js",
+          "target": "./laoder/bundles/webshims.js",
+          "options": {
+            "overwrite": true
+          }
+        },
+        {
+          "type": "copy",
+          "src": "../privatesky/psknode/bundles/loaderBoot.js",
+          "target": "./loader/bundles/loaderBoot.js",
+          "options": {
+            "overwrite": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workbox-cli Install (globally)",
+      "src": "",
+      "description": "the dev dependencies break cardinal build",
+      "actions": [
+        {
+          "type": "execute",
+          "cmd": "npm install -g workbox-cli"
+        }
+      ]
+    }
+  ],
+  "build": [
+    {
+      "name": "Copy decorator validation",
+      "src": "",
+      "actions": [
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/decorator-validation/dist/esm/index.bundle.min.js",
+          "target": "./loader/bundles/decorator-validation.esm.js",
+          "options": {
+            "overwrite": true
+          }
+        },
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/decorator-validation/dist/index.bundle.js",
+          "target": "./loader/bundles/decorator-validation.js",
+          "options": {
+            "overwrite": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Copy db decorators",
+      "src": "",
+      "actions": [
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/db-decorators/dist/esm/index.bundle.min.esm.js",
+          "target": "./loader/bundles/db-decorators.esm.js",
+          "options": {
+            "overwrite": true
+          }
+        },
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/db-decorators/dist/index.bundle.min.js",
+          "target": "./loader/bundles/db-decorators.js",
+          "options": {
+            "overwrite": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Copy dsu blueprint",
+      "src": "",
+      "actions": [
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/dsu-blueprint/dist/esm/index.bundle.min.esm.js",
+          "target": "./loader/bundles/dsu-blueprint.esm.js",
+          "options": {
+            "overwrite": true
+          }
+        },
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/dsu-blueprint/dist/index.bundle.min.js",
+          "target": "./loader/bundles/dsu-blueprint.js",
+          "options": {
+            "overwrite": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Copy ui decorators",
+      "src": "",
+      "actions": [
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/ui-decorators/dist/esm/index.bundle.min.esm.js",
+          "target": "./loader/bundles/ui-decorators.esm.js",
+          "options": {
+            "overwrite": true
+          }
+        },
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/ui-decorators/dist/index.bundle.min.js",
+          "target": "./loader/bundles/ui-decorators.js",
+          "options": {
+            "overwrite": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Copy ui decorators web",
+      "src": "",
+      "actions": [
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/ui-decorators-web/dist/esm/index.bundle.min.esm.js",
+          "target": "./loader/bundles/ui-decorators-web.esm.js",
+          "options": {
+            "overwrite": true
+          }
+        },
+        {
+          "type": "copy",
+          "src": "./node_modules/@tvenceslau/ui-decorators-web/dist/index.bundle.min.js",
+          "target": "./loader/bundles/ui-decorators-web.js",
+          "options": {
+            "overwrite": true
+          }
+        }
+      ]
+    }
+  ]
+}
