@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Declarative OpenDSU creation and management API ui/WalletRunner.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">OpenDSU Blueprint</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/TiagoVenceslau/dsu-blueprint#readme"
+                        >
+                            Github Repository
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/TiagoVenceslau"
+                        >
+                            Github Profile
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-dapp-trust-loader.html">dapp-trust-loader</a></li></ul><h3>Classes</h3><ul><li><a href="CredentialsManager.html">CredentialsManager</a></li><li><a href="CredentialsManager_CredentialsManager.html">CredentialsManager</a></li><li><a href="EventMiddleWare.html">EventMiddleWare</a></li><li><a href="LoaderLocalStorage.html">LoaderLocalStorage</a></li><li><a href="WalletService.html">WalletService</a></li></ul><h3>Interfaces</h3><ul><li><a href="LoaderStorage.html">LoaderStorage</a></li></ul><h3><a href="global.html">Global</a></h3></div><div class="category"><h2>Constants</h2><h3>Global</h3><ul><li><a href="global.html#StorageKeys">StorageKeys</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>ui/WalletRunner.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {Spinner} from "./Spinner";
+import {IFRAME_DEFS} from "./constants";
+import {LoaderStorage, NavigatorUtils, ServiceWorkerError} from "../services";
+import {PopUp} from "./Popup";
+import {EventMiddleWare} from "../services/EventMiddleware";
+import {ServiceWorkerConstants, StorageKeys} from "../services/constants";
+import {Err} from "../types";
+
+
+export class WalletRunner {
+    private crypto: any;
+    private seed: string;
+    private hash: string;
+    private spinner: Spinner;
+    private popUp: PopUp;
+    private storage: LoaderStorage
+
+    constructor(seed: string, storage: LoaderStorage, spinner: Spinner, popUp: PopUp){
+        this.seed = seed;
+        this.crypto = require('opendsu').loadApi('crypto');
+        this.hash = this.crypto.sha256(this.seed);
+        this.spinner = spinner;
+        this.popUp = popUp;
+        this.storage = storage;
+    }
+
+    private getIframeBase(): string {
+        let iPath = window.location.pathname;
+        return iPath.split("loader/")[0] + "loader/iframe/"
+    }
+
+    private createTimerElement(){
+        const script = document.createElement('script');
+        script.src = './Timer.js';
+        return script;
+    }
+
+    /**
+     * Builds the IFrame container for the Distributed App
+     * @param {boolean} useSeedForIFrameSource
+     */
+    private createContainerIFrame(useSeedForIFrameSource: boolean): HTMLIFrameElement {
+        const iframe: HTMLIFrameElement = document.createElement('iframe');
+        Object.entries(IFRAME_DEFS.ATTRIBUTES).forEach(([key, value]) => iframe.setAttribute(key, value));
+        // @ts-ignore
+        Object.entries(IFRAME_DEFS.STYLE).forEach(([key, value]) => iframe.style[key] = value);
+        iframe.src = window.location.origin + this.getIframeBase() + (useSeedForIFrameSource ? this.seed : this.hash);
+        return iframe;
+    }
+
+    private removeElementsFromUI(iframe: HTMLIFrameElement, removeSpinner: boolean, removeIFrame: boolean, removeRest: boolean): void {
+        if (removeIFrame &amp;&amp; removeSpinner &amp;&amp; removeRest){
+            document.body.innerHTML = '';
+            return;
+        }
+
+        if (removeIFrame)
+            iframe.remove();
+
+        if (removeSpinner)
+            this.spinner.remove();
+
+        if (removeRest)
+            try {
+                document.querySelectorAll("body > *:not(iframe):not(.loader-parent-container)")
+                    .forEach((node) => node.remove());
+            } catch (e) {
+                // failed to remove certain nodes... should be ok
+            }
+    }
+
+    private setupLoadEventsListener(navigatorUtils: NavigatorUtils, iframe: HTMLIFrameElement){
+        const eventMiddleware = new EventMiddleWare(iframe, this.hash);
+
+        const self = this;
+
+        eventMiddleware.registerQuery(ServiceWorkerConstants.QUERIES.SEED, () => {
+            return {seed: self.seed}
+        });
+
+        eventMiddleware.onStatus(ServiceWorkerConstants.STATE.COMPLETED, () => {
+            // "app-placeholder" is injected by service worker
+            // in that case 2 completed events are emitted
+            if (iframe.hasAttribute("app-placeholder")) {
+                self.removeElementsFromUI(iframe, true, false, false);
+                iframe.removeAttribute("app-placeholder");
+                document.body.prepend(iframe);
+                return;
+            }
+
+            self.removeElementsFromUI(iframe, false, true, false);
+            iframe.hidden = false;
+        });
+
+        eventMiddleware.onStatus(ServiceWorkerConstants.STATE.SIGN_OUT, (data) => {
+            navigatorUtils.unregisterAllServiceWorkers((err: Err) => {
+                if (data.deleteSeed)
+                    self.storage.removeItem(StorageKeys.SEED_CAGE);
+                window.location.reload();
+            });
+        });
+
+        eventMiddleware.onStatus(ServiceWorkerConstants.STATE.ERROR, () => {
+            throw new ServiceWorkerError(`Unable to load application`);
+        });
+
+        iframe.hidden = true;
+    }
+
+    private sendCompletedEvent(iframe: HTMLIFrameElement){
+        const iframeDocument = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : undefined);
+        if (!iframeDocument)
+            throw new ServiceWorkerError(`Could not find Iframe document`);
+
+        if (iframeDocument.readyState !== ServiceWorkerConstants.STATE.COMPLETE) {
+            console.log('Event "completed" can be emitted only when iframe is loaded!');
+            return;
+        }
+
+        const iframeIdentity = iframe.getAttribute('identity');
+        if (!iframeIdentity) {
+            console.log('Event "completed" can not be emitted if no identity was found!');
+            return;
+        }
+
+        const completedEvent = new CustomEvent(iframeIdentity, { detail: { status: ServiceWorkerConstants.STATE.COMPLETED }});
+
+        // TODO: Romsoft has specific code to wait for cardinal/webcardinal to load before sending this event. match that in a general manner
+        document.dispatchEvent(completedEvent);
+    }
+
+    private setupSeedRequestListener(navigatorUtils: NavigatorUtils){
+        navigatorUtils.addServiceWorkerEventListener(ServiceWorkerConstants.EVENTS.MESSAGE, (e: any) => {
+            if (!e.data || e.data.query !== "seed") {
+                return;
+            }
+
+            const swWorkerIdentity = e.data.identity;
+            if (swWorkerIdentity === this.hash) {
+                e.source.postMessage({
+                    seed: this.seed,
+                });
+            }
+        });
+    }
+
+    private setupProgressListener(){
+        document.addEventListener(ServiceWorkerConstants.EVENTS.PROGRESS, async (e: any) => {
+            const {progress, status} = e.detail;
+            if (progress === 100){
+                await this.spinner.remove();
+                return
+            }
+            if (this.spinner.isVisible())
+                await this.spinner.update(status);
+            else
+                await this.spinner.show(status);
+        })
+    }
+
+    async run(navigatorUtils: NavigatorUtils){
+        if(navigatorUtils.areServiceWorkersEnabled() &amp;&amp; !navigatorUtils.areServiceWorkersSupported())
+            return this.popUp.ask(`Your current browser doe's support this application`);
+
+        const iframe = this.createContainerIFrame(!navigatorUtils.areServiceWorkersEnabled());
+        this.setupLoadEventsListener(navigatorUtils, iframe);
+        const self = this;
+
+        if (navigatorUtils.areServiceWorkersEnabled()){
+            let loadingInterval, loadingProgress = 10;
+            await this.spinner.show(`Loading Application`);
+
+            iframe.addEventListener(ServiceWorkerConstants.EVENTS.LOAD, () => {
+                self.sendCompletedEvent(iframe);
+            });
+
+            document.appendChild(iframe);
+            const timer = this.createTimerElement();
+            document.appendChild(timer);
+            navigatorUtils.registerPwaServiceWorker();
+            return;
+        }
+
+        this.setupSeedRequestListener(navigatorUtils);
+        this.setupProgressListener();
+
+        navigatorUtils.unregisterAllServiceWorkers(() => {
+            navigatorUtils.registerServiceWorker({
+                name: "swLoader.js",
+                path: "swLoader.js",
+                scope: self.getIframeBase()
+            }, (err) => {
+                if (err)
+                    throw err;
+                iframe.addEventListener(ServiceWorkerConstants.EVENTS.LOAD, () => {
+                    navigatorUtils.registerPwaServiceWorker();
+                    self.sendCompletedEvent(iframe);
+                });
+                document.body.appendChild(iframe);
+            });
+        });
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

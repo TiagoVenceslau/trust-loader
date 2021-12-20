@@ -56,6 +56,8 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "better-docs": "^2.3.2",
+    "taffydb": "^2.7.3",
     "workbox-window": "^6.4.2"
   }
 }
