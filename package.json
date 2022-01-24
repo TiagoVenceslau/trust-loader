@@ -2,6 +2,8 @@
   "name": "@tvenceslau/trust-loader",
   "version": "0.0.3",
   "description": "Trust Loader for Distributed Applications",
+  "main": "./dist/index.min.js",
+  "module": "./dist/esm/index.min.esm.js",
   "scripts": {
     "start:dev": "nodemon",
     "start": "npm run build && node lib/index.js",
@@ -45,6 +47,7 @@
     "@ionic/core": "^6.0.1",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.0.1",
+    "gulp-webpack-typescript-pipeline": "^17.0.1",
     "jest": "^27.0.6",
     "jsdoc": "^3.6.7",
     "markdown-include": "^0.4.3",
@@ -56,8 +59,14 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "better-docs": "^2.3.2",
-    "taffydb": "^2.7.3",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-expect-file": "^2.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-uglify": "^3.0.2",
     "workbox-window": "^6.4.2"
   }
 }

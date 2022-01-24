@@ -8,6 +8,11 @@ import {
 import {LoaderLocalStorage, LoaderStorage, CredentialsManager, WalletService, NavigatorUtils} from "./services";
 import {DefaultPopUp, LogSpinner, PopUp, Spinner} from "./ui";
 
+/**
+ * @constant DefaultLoaderConfig
+ *
+ * @category Constants
+ */
 export const DefaultLoaderConfig: LoaderConfig = {
     defaultPin: "0000",
     codeFolderName: "code",
@@ -17,6 +22,14 @@ export const DefaultLoaderConfig: LoaderConfig = {
     ssiFileName: "seed"
 }
 
+/**
+ * Main Loader class.
+ *
+ * Responsible for handling all loading of dApps to the browser
+ *
+ * @class Loader
+ * @implements OpenDSULoader
+ */
 export class Loader implements OpenDSULoader {
     private readonly environment: EnvironmentDefinition;
     private readonly strategy?: WalletCreationStrategy;

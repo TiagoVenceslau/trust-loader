@@ -1,5 +1,5 @@
 import {Spinner} from "./ui";
-import {CredentialsManager, WalletService} from "./services";
+import {WalletService} from "./services";
 
 export type LoaderConfig = {
     defaultPin?: string,
